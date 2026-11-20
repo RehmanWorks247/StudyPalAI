@@ -34,8 +34,8 @@
   "devDependencies": {
     "@nestjs/testing": "12.5.1",
     "@studypal/typescript-config": "workspace:*",
-    "@types/node": "24.19.2",
-    "concurrently": "9.2.1",
+    "@types/node": "26.6.6",
+    "concurrently": "10.0.7",
     "typescript": "5.9.3"
   }
 }
