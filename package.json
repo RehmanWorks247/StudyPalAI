@@ -1,0 +1,46 @@
+{
+  "name": "studypal",
+  "private": true,
+  "version": "0.0.0",
+  "packageManager": "pnpm@11.9.0",
+  "engines": {
+    "node": ">=24.16.0 <25",
+    "pnpm": "11.9.0"
+  },
+  "scripts": {
+    "dev": "pnpm build:packages && dotenv -e .env -- turbo run dev",
+    "build:packages": "turbo run build --filter='./packages/*'",
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "lint": "eslint . --max-warnings 0 && pnpm boundaries",
+    "boundaries": "depcruise apps packages --config .dependency-cruiser.cjs",
+    "test": "node --test scripts/local-web-server.test.mjs && turbo run test",
+    "test:integration": "dotenv -e .env -- turbo run test:integration --filter=@studypal/database && dotenv -e .env -- turbo run test:integration --filter=@studypal/api",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm api:check",
+    "api:generate": "turbo run build --filter=@studypal/api... && pnpm --filter @studypal/api openapi:generate && pnpm --filter @studypal/api-client generate",
+    "api:check": "node scripts/check-generated.mjs",
+    "db:up": "docker compose -f infra/docker/compose.yml up -d --wait",
+    "db:down": "docker compose -f infra/docker/compose.yml down",
+    "db:generate": "dotenv -e .env -- pnpm --filter @studypal/database db:generate",
+    "db:migrate": "dotenv -e .env -- pnpm --filter @studypal/database db:migrate",
+    "test:e2e:postgres": "node --env-file=.env scripts/test-browser-postgres.mjs",
+    "local:start": "node scripts/start-local.mjs",
+    "test:e2e:clerk": "node --env-file=.env apps/web/e2e/clerk-live.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "24.19.2",
+    "dependency-cruiser": "18.8.0",
+    "dotenv-cli": "11.1.0",
+    "eslint": "10.15.0",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-react-refresh": "0.5.8",
+    "globals": "17.14.0",
+    "prettier": "3.10.1",
+    "turbo": "2.11.12",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.73.0"
+  }
+}

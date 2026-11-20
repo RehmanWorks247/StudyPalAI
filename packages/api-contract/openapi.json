@@ -1,0 +1,2321 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/v1/health/live": {
+      "get": {
+        "operationId": "healthLive",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponseDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Check whether the API process can serve requests",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/api/v1/health/ready": {
+      "get": {
+        "operationId": "healthReady",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "headers": {
+              "x-studypal-auth-mode": {
+                "description": "Configured workspace authentication mode",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "clerk",
+                    "local"
+                  ]
+                }
+              }
+            },
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponseDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "503": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "summary": "Check whether the API can reach PostgreSQL",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/api/v1/workspace/sign-in": {
+      "post": {
+        "operationId": "signInWorkspace",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClerkWorkspaceSessionDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Pairing or session credentials missing or invalid",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Untrusted origin, remote host or CSRF token",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Local service unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "clerk-session": []
+          }
+        ],
+        "summary": "Bind this browser to its verified Clerk session",
+        "tags": [
+          "workspace"
+        ]
+      }
+    },
+    "/api/v1/workspace/sign-out": {
+      "post": {
+        "operationId": "signOutWorkspace",
+        "parameters": [
+          {
+            "name": "X-StudyPal-CSRF",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "Pairing or session credentials missing or invalid",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Untrusted origin, remote host or CSRF token",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Local service unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "workspace-session": [],
+            "clerk-session": []
+          },
+          {
+            "workspace-session": [],
+            "clerk-cookie": []
+          },
+          {
+            "workspace-session": []
+          }
+        ],
+        "summary": "Revoke this browser session before signing out of Clerk",
+        "tags": [
+          "workspace"
+        ],
+        "description": " Clerk mode requires a StudyPal cookie and a current Clerk JWT. A StudyPal cookie alone is accepted only in explicitly enabled local pairing mode."
+      }
+    },
+    "/api/v1/workspace/pair": {
+      "post": {
+        "operationId": "pairWorkspace",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Pairing or session credentials missing or invalid",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Untrusted origin, remote host or CSRF token",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Local service unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "pairing-key": []
+          }
+        ],
+        "summary": "Pair this local browser with the installation owner",
+        "tags": [
+          "workspace"
+        ]
+      }
+    },
+    "/api/v1/workspace/session": {
+      "get": {
+        "operationId": "workspaceSession",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Pairing or session credentials missing or invalid",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Untrusted origin, remote host or CSRF token",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Local service unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "workspace-session": [],
+            "clerk-session": []
+          },
+          {
+            "workspace-session": [],
+            "clerk-cookie": []
+          },
+          {
+            "workspace-session": []
+          }
+        ],
+        "summary": "Get the current paired session’s CSRF token",
+        "tags": [
+          "workspace"
+        ],
+        "description": " Clerk mode requires a StudyPal cookie and a current Clerk JWT. A StudyPal cookie alone is accepted only in explicitly enabled local pairing mode."
+      }
+    },
+    "/api/v1/workspace": {
+      "get": {
+        "operationId": "readWorkspace",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkspaceResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Pairing or session credentials missing or invalid",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Untrusted origin, remote host or CSRF token",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Local service unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "workspace-session": [],
+            "clerk-session": []
+          },
+          {
+            "workspace-session": [],
+            "clerk-cookie": []
+          },
+          {
+            "workspace-session": []
+          }
+        ],
+        "summary": "Read the paired owner’s local workspace",
+        "tags": [
+          "workspace"
+        ],
+        "description": " Clerk mode requires a StudyPal cookie and a current Clerk JWT. A StudyPal cookie alone is accepted only in explicitly enabled local pairing mode."
+      },
+      "put": {
+        "operationId": "saveWorkspace",
+        "parameters": [
+          {
+            "name": "X-StudyPal-CSRF",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveWorkspaceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkspaceResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid snapshot",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Pairing or session credentials missing or invalid",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Untrusted origin, remote host or CSRF token",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Snapshot too large",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Local service unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "workspace-session": [],
+            "clerk-session": []
+          },
+          {
+            "workspace-session": [],
+            "clerk-cookie": []
+          },
+          {
+            "workspace-session": []
+          }
+        ],
+        "summary": "Save a snapshot if the owner’s revision matches",
+        "tags": [
+          "workspace"
+        ],
+        "description": " Clerk mode requires a StudyPal cookie and a current Clerk JWT. A StudyPal cookie alone is accepted only in explicitly enabled local pairing mode."
+      }
+    },
+    "/api/v1/frontier/jobs": {
+      "post": {
+        "operationId": "enqueueFrontierJob",
+        "parameters": [
+          {
+            "name": "X-StudyPal-CSRF",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FrontierRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FrontierJobDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Pairing or session credentials missing or invalid",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Untrusted origin, remote host or CSRF token",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Local service unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "workspace-session": [],
+            "clerk-session": []
+          },
+          {
+            "workspace-session": [],
+            "clerk-cookie": []
+          },
+          {
+            "workspace-session": []
+          }
+        ],
+        "summary": "",
+        "tags": [
+          "frontier"
+        ],
+        "description": " Clerk mode requires a StudyPal cookie and a current Clerk JWT. A StudyPal cookie alone is accepted only in explicitly enabled local pairing mode."
+      }
+    },
+    "/api/v1/frontier/jobs/{id}": {
+      "get": {
+        "operationId": "getFrontierJob",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FrontierJobDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Pairing or session credentials missing or invalid",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Untrusted origin, remote host or CSRF token",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Local service unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "workspace-session": [],
+            "clerk-session": []
+          },
+          {
+            "workspace-session": [],
+            "clerk-cookie": []
+          },
+          {
+            "workspace-session": []
+          }
+        ],
+        "summary": "",
+        "tags": [
+          "frontier"
+        ],
+        "description": " Clerk mode requires a StudyPal cookie and a current Clerk JWT. A StudyPal cookie alone is accepted only in explicitly enabled local pairing mode."
+      },
+      "delete": {
+        "operationId": "cancelFrontierJob",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-StudyPal-CSRF",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FrontierJobDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Pairing or session credentials missing or invalid",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Untrusted origin, remote host or CSRF token",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Local service unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "workspace-session": [],
+            "clerk-session": []
+          },
+          {
+            "workspace-session": [],
+            "clerk-cookie": []
+          },
+          {
+            "workspace-session": []
+          }
+        ],
+        "summary": "",
+        "tags": [
+          "frontier"
+        ],
+        "description": " Clerk mode requires a StudyPal cookie and a current Clerk JWT. A StudyPal cookie alone is accepted only in explicitly enabled local pairing mode."
+      }
+    },
+    "/api/v1/recordings": {
+      "get": {
+        "operationId": "listRecordings",
+        "parameters": [
+          {
+            "name": "setId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RecordingListItemDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid recording or audio part",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Pairing or session credentials missing or invalid",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Untrusted origin, remote host or CSRF token",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recording unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicting recording, revision, or part",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Recording or storage limit reached",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Local service unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "workspace-session": [],
+            "clerk-session": []
+          },
+          {
+            "workspace-session": [],
+            "clerk-cookie": []
+          },
+          {
+            "workspace-session": []
+          }
+        ],
+        "summary": "",
+        "tags": [
+          "recordings"
+        ],
+        "description": " Clerk mode requires a StudyPal cookie and a current Clerk JWT. A StudyPal cookie alone is accepted only in explicitly enabled local pairing mode."
+      }
+    },
+    "/api/v1/recordings/{id}": {
+      "get": {
+        "operationId": "getRecording",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecordingDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid recording or audio part",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Pairing or session credentials missing or invalid",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Untrusted origin, remote host or CSRF token",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recording unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicting recording, revision, or part",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Recording or storage limit reached",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Local service unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "workspace-session": [],
+            "clerk-session": []
+          },
+          {
+            "workspace-session": [],
+            "clerk-cookie": []
+          },
+          {
+            "workspace-session": []
+          }
+        ],
+        "summary": "",
+        "tags": [
+          "recordings"
+        ],
+        "description": " Clerk mode requires a StudyPal cookie and a current Clerk JWT. A StudyPal cookie alone is accepted only in explicitly enabled local pairing mode."
+      },
+      "put": {
+        "operationId": "beginRecordingBackup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-StudyPal-CSRF",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecordingInputDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecordingDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid recording or audio part",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Pairing or session credentials missing or invalid",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Untrusted origin, remote host or CSRF token",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recording unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicting recording, revision, or part",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Recording or storage limit reached",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Local service unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "workspace-session": [],
+            "clerk-session": []
+          },
+          {
+            "workspace-session": [],
+            "clerk-cookie": []
+          },
+          {
+            "workspace-session": []
+          }
+        ],
+        "summary": "",
+        "tags": [
+          "recordings"
+        ],
+        "description": " Clerk mode requires a StudyPal cookie and a current Clerk JWT. A StudyPal cookie alone is accepted only in explicitly enabled local pairing mode."
+      },
+      "delete": {
+        "operationId": "deleteRecordingBackup",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "revision",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "X-StudyPal-CSRF",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "400": {
+            "description": "Invalid recording or audio part",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Pairing or session credentials missing or invalid",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Untrusted origin, remote host or CSRF token",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recording unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicting recording, revision, or part",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Recording or storage limit reached",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Local service unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "workspace-session": [],
+            "clerk-session": []
+          },
+          {
+            "workspace-session": [],
+            "clerk-cookie": []
+          },
+          {
+            "workspace-session": []
+          }
+        ],
+        "summary": "",
+        "tags": [
+          "recordings"
+        ],
+        "description": " Clerk mode requires a StudyPal cookie and a current Clerk JWT. A StudyPal cookie alone is accepted only in explicitly enabled local pairing mode."
+      }
+    },
+    "/api/v1/recordings/{id}/parts/{part}": {
+      "put": {
+        "operationId": "saveRecordingPart",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "part",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "X-StudyPal-CSRF",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AudioPartDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecordingDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid recording or audio part",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Pairing or session credentials missing or invalid",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Untrusted origin, remote host or CSRF token",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recording unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicting recording, revision, or part",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Recording or storage limit reached",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Local service unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "workspace-session": [],
+            "clerk-session": []
+          },
+          {
+            "workspace-session": [],
+            "clerk-cookie": []
+          },
+          {
+            "workspace-session": []
+          }
+        ],
+        "summary": "",
+        "tags": [
+          "recordings"
+        ],
+        "description": " Clerk mode requires a StudyPal cookie and a current Clerk JWT. A StudyPal cookie alone is accepted only in explicitly enabled local pairing mode."
+      },
+      "get": {
+        "operationId": "readRecordingPart",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "part",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AudioPartDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid recording or audio part",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Pairing or session credentials missing or invalid",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Untrusted origin, remote host or CSRF token",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recording unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicting recording, revision, or part",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Recording or storage limit reached",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Local service unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "workspace-session": [],
+            "clerk-session": []
+          },
+          {
+            "workspace-session": [],
+            "clerk-cookie": []
+          },
+          {
+            "workspace-session": []
+          }
+        ],
+        "summary": "",
+        "tags": [
+          "recordings"
+        ],
+        "description": " Clerk mode requires a StudyPal cookie and a current Clerk JWT. A StudyPal cookie alone is accepted only in explicitly enabled local pairing mode."
+      }
+    }
+  },
+  "info": {
+    "title": "StudyPal API",
+    "description": "StudyPal workspace, recording, practice generation and health endpoints.",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "pairing-key": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http",
+        "description": "Local installation pairing key"
+      },
+      "workspace-session": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "studypal_session"
+      },
+      "clerk-session": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http",
+        "description": "Current verified Clerk user session JWT"
+      },
+      "clerk-cookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "__session"
+      }
+    },
+    "schemas": {
+      "HealthResponseDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok"
+            ],
+            "example": "ok"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "ClerkWorkspaceSessionDto": {
+        "type": "object",
+        "properties": {
+          "csrfToken": {
+            "type": "string",
+            "description": "CSRF token for this session, required on mutations"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Verified server expiry for this StudyPal session binding"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Stable StudyPal owner ID assigned to the verified Clerk account"
+          }
+        },
+        "required": [
+          "csrfToken",
+          "expiresAt",
+          "ownerId"
+        ]
+      },
+      "SessionResponseDto": {
+        "type": "object",
+        "properties": {
+          "csrfToken": {
+            "type": "string",
+            "description": "CSRF token for this session, required on mutations"
+          }
+        },
+        "required": [
+          "csrfToken"
+        ]
+      },
+      "WorkspaceResponseDto": {
+        "type": "object",
+        "properties": {
+          "csrfToken": {
+            "type": "string",
+            "description": "CSRF token for this session, required on mutations"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "content": {
+            "type": "string",
+            "description": "Serialized workspace object, or an empty string at revision zero."
+          }
+        },
+        "required": [
+          "csrfToken",
+          "revision",
+          "content"
+        ]
+      },
+      "SaveWorkspaceDto": {
+        "type": "object",
+        "properties": {
+          "revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483646,
+            "description": "Last revision read by this client"
+          },
+          "content": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 8388608,
+            "description": "Serialized JSON object, up to 8 MiB of UTF-8"
+          }
+        },
+        "required": [
+          "revision",
+          "content"
+        ]
+      },
+      "FrontierPassageDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 240
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 1100
+          }
+        },
+        "required": [
+          "name",
+          "text"
+        ]
+      },
+      "FrontierRequestDto": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "quiz",
+              "grade"
+            ]
+          },
+          "count": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "prompt": {
+            "type": "string",
+            "maxLength": 1500
+          },
+          "passages": {
+            "minItems": 1,
+            "maxItems": 4,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FrontierPassageDto"
+            }
+          }
+        },
+        "required": [
+          "requestId",
+          "kind",
+          "count",
+          "prompt",
+          "passages"
+        ]
+      },
+      "FrontierQuestionDto": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string"
+          },
+          "correct": {
+            "type": "string"
+          },
+          "distractors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "explanation": {
+            "type": "string"
+          },
+          "quote": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "question",
+          "correct",
+          "distractors",
+          "explanation",
+          "quote"
+        ]
+      },
+      "FrontierGradeDto": {
+        "type": "object",
+        "properties": {
+          "score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 4
+          },
+          "strength": {
+            "type": "string"
+          },
+          "improvement": {
+            "type": "string"
+          },
+          "quote": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "score",
+          "strength",
+          "improvement",
+          "quote"
+        ]
+      },
+      "FrontierResultDto": {
+        "type": "object",
+        "properties": {
+          "questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FrontierQuestionDto"
+            }
+          },
+          "grade": {
+            "$ref": "#/components/schemas/FrontierGradeDto"
+          }
+        }
+      },
+      "FrontierJobDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "completed",
+              "failed",
+              "canceled"
+            ]
+          },
+          "result": {
+            "$ref": "#/components/schemas/FrontierResultDto"
+          }
+        },
+        "required": [
+          "id",
+          "status"
+        ]
+      },
+      "RecordingListItemDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "seconds": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 7200
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 214958080
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483646
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "complete": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "title",
+          "seconds",
+          "size",
+          "revision",
+          "id",
+          "complete"
+        ]
+      },
+      "RecordingDto": {
+        "type": "object",
+        "properties": {
+          "setId": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "seconds": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 7200
+          },
+          "transcript": {
+            "type": "string",
+            "maxLength": 100000
+          },
+          "mediaType": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 214958080
+          },
+          "audioHash": {
+            "type": "string",
+            "description": "SHA-256 of the ordered, concatenated lowercase SHA-256 hex digests of each 4 MiB audio part"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483646
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "nextPart": {
+            "type": "integer"
+          },
+          "complete": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "setId",
+          "title",
+          "createdAt",
+          "seconds",
+          "transcript",
+          "mediaType",
+          "size",
+          "audioHash",
+          "revision",
+          "id",
+          "nextPart",
+          "complete"
+        ]
+      },
+      "RecordingInputDto": {
+        "type": "object",
+        "properties": {
+          "setId": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "seconds": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 7200
+          },
+          "transcript": {
+            "type": "string",
+            "maxLength": 100000
+          },
+          "mediaType": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 214958080
+          },
+          "audioHash": {
+            "type": "string",
+            "description": "SHA-256 of the ordered, concatenated lowercase SHA-256 hex digests of each 4 MiB audio part"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483646
+          }
+        },
+        "required": [
+          "setId",
+          "title",
+          "createdAt",
+          "seconds",
+          "transcript",
+          "mediaType",
+          "size",
+          "audioHash",
+          "revision"
+        ]
+      },
+      "AudioPartDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "string",
+            "maxLength": 5592408,
+            "description": "Base64 audio bytes (up to 4 MiB)"
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ProblemDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "about:blank"
+          },
+          "title": {
+            "type": "string",
+            "example": "Service Unavailable"
+          },
+          "status": {
+            "type": "number",
+            "example": 503
+          },
+          "detail": {
+            "type": "string",
+            "example": "The service is temporarily unavailable."
+          },
+          "instance": {
+            "type": "string",
+            "example": "/api/v1/health/ready"
+          },
+          "requestId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "type",
+          "title",
+          "status",
+          "detail",
+          "instance",
+          "requestId"
+        ]
+      }
+    }
+  }
+}

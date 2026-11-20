@@ -1,0 +1,8 @@
+{
+  "name": "@studypal/api-contract",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./openapi.json": "./openapi.json"
+  }
+}

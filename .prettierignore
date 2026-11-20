@@ -1,0 +1,12 @@
+pnpm-lock.yaml
+node_modules/
+dist/
+dist-test/
+coverage/
+.turbo/
+packages/api-client/src/generated/
+packages/api-contract/openapi.json
+packages/database/migrations/meta/
+
+playwright-report/
+test-results/

@@ -1,0 +1,56 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "globalDependencies": ["packages/typescript-config/*.json"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"],
+      "env": ["VITE_*", "NODE_ENV"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": [],
+      "env": ["CI"]
+    },
+    "test:integration": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "passThroughEnv": ["DATABASE_URL"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true,
+      "passThroughEnv": [
+        "DATABASE_URL",
+        "DATABASE_POOL_MAX",
+        "API_*",
+        "CORS_ORIGINS",
+        "LOG_LEVEL",
+        "NODE_ENV",
+        "ENABLE_API_DOCS",
+        "RATE_LIMIT_MAX",
+        "VITE_*",
+        "WORKSPACE_*",
+        "CLERK_ISSUER",
+        "CLERK_JWT_KEY",
+        "FRONTIER_*",
+        "OPENAI_API_KEY"
+      ]
+    },
+    "@studypal/web#dev": {
+      "cache": false,
+      "persistent": true,
+      "passThroughEnv": ["API_PORT", "VITE_*", "NODE_ENV"]
+    },
+    "@studypal/web#build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.env", "$TURBO_ROOT$/.env.*"],
+      "env": ["VITE_*", "NODE_ENV"]
+    }
+  }
+}

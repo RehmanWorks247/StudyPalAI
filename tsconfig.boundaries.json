@@ -1,0 +1,13 @@
+{
+  "extends": "./packages/typescript-config/base.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["apps/web/src/*"],
+      "@studypal/database": ["packages/database/src/index.ts"],
+      "@studypal/api-client": ["packages/api-client/src/index.ts"]
+    }
+  }
+}

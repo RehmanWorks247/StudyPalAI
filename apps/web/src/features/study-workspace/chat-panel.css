@@ -1,0 +1,28 @@
+.chat-status {
+  margin: 8px 12px;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.chat-status button {
+  text-decoration: underline;
+  margin-inline-start: 6px;
+}
+.chat-history {
+  max-height: min(70vh, 360px);
+  overflow-y: auto;
+}
+.chat-history button {
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 9px 0;
+  text-align: left;
+  width: 100%;
+  border-bottom: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+.chat-history small {
+  margin: 5px 0;
+}

@@ -1,0 +1,61 @@
+.materials-recording,
+.materials-recording .sp-field {
+  display: grid;
+  gap: 12px;
+}
+.materials-recording-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.materials-recording > audio {
+  width: 100%;
+  min-width: 0;
+}
+.materials-recorder {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 34px 16px;
+  background: var(--sp-paper);
+  border-radius: 10px;
+}
+.materials-recording-icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1px solid var(--sp-line);
+  color: var(--sp-muted);
+}
+.materials-recorder.is-recording .materials-recording-icon {
+  background: var(--sp-accent-soft);
+  color: var(--sp-accent);
+  border-color: var(--sp-accent);
+}
+.materials-recording-time {
+  font-size: 42px;
+  font-weight: 450;
+  letter-spacing: -1px;
+  font-variant-numeric: tabular-nums;
+}
+.materials-recorder p {
+  font-size: 14px;
+  color: var(--sp-muted);
+}
+.materials-recording-controls {
+  justify-content: center;
+}
+.materials-discard {
+  padding: 16px;
+  border: 1px solid var(--sp-line);
+  border-radius: 8px;
+  display: grid;
+  gap: 12px;
+}
+.materials-discard > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
