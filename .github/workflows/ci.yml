@@ -26,7 +26,7 @@ jobs:
     env:
       DATABASE_URL: postgresql://studypal:studypal@localhost:5432/studypal_test
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v4
         with:
           version: 11.9.0
